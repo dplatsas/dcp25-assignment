@@ -1,12 +1,12 @@
-# Project Title
+# ABC File Music Parser
 
 - [Assignment brief](assignment.md)
 
-Name:
+Name: Dimitrios Platsas
 
-Student Number: 
+Student Number: C24423222
 
-Class Group:
+Class Group: TU850 Year 2 Data Science and Artificial Intelligence
 
 # Video
 
@@ -109,4 +109,5 @@ This is a table:
 |Some stuff | Some more stuff in this column |
 |Some stuff | Some more stuff in this column |
 |Some stuff | Some more stuff in this column |
+
 
