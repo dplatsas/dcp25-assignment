@@ -26,3 +26,17 @@ def setup_database():
     conn.close()
     print("Database setup complete")
 
+def insert_tune(book_number, tune_data):
+    """Insert a single tune into the database"""
+    conn = sqlite3.connect('tunes.db')
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+        INSERT INTO tunes (book_number, title, tune_type, key, meter, raw_abc)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', (book_number, tune_data.get('title', 'Unknown'), 
+          tune_data.get('type', 'Unknown'), tune_data.get('key', ''),
+          tune_data.get('meter', ''), tune_data.get('raw_abc', '')))
+    
+    conn.commit()
+    conn.close()
