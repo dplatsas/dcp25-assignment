@@ -40,3 +40,62 @@ def insert_tune(book_number, tune_data):
     
     conn.commit()
     conn.close()
+
+
+def parse_abc_file(file_path):
+    """Parse ABC file using the same approach as previous labs"""
+    with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+        lines = f.readlines()
+    
+    tunes = []
+    current_tune = None
+    current_tune_notation = ""
+    
+    for line in lines:    
+        if line.startswith("X:"):
+            # we are in a new tune
+            if current_tune and current_tune_notation.strip():
+                current_tune["raw_abc"] = current_tune_notation
+                tunes.append(current_tune)
+            
+            x = line[2:].strip()
+            current_tune = {"x": x}
+            current_tune_notation = line
+                
+        elif line.startswith("T:") and current_tune:
+            title = line[2:].strip()
+            current_tune["title"] = title
+            current_tune_notation += line
+            
+        elif line.startswith("R:") and current_tune:
+            tune_type = line[2:].strip()
+            current_tune["type"] = tune_type
+            current_tune_notation += line
+            
+        elif line.startswith("K:") and current_tune:
+            key = line[2:].strip()
+            current_tune["key"] = key
+            current_tune_notation += line
+            
+        elif line.startswith("M:") and current_tune:
+            meter = line[2:].strip()
+            current_tune["meter"] = meter
+            current_tune_notation += line
+            
+        elif line.strip() == "" and current_tune:
+            # End of tune
+            if current_tune_notation.strip():
+                current_tune["raw_abc"] = current_tune_notation
+                tunes.append(current_tune)
+            current_tune = None
+            current_tune_notation = ""
+            
+        elif current_tune:
+            current_tune_notation += line
+    
+    # Don't forget the last tune
+    if current_tune and current_tune_notation.strip():
+        current_tune["raw_abc"] = current_tune_notation
+        tunes.append(current_tune)
+    
+    return tunes
