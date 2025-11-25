@@ -161,3 +161,76 @@ def search_tunes(df, search_term):
     """Search tunes by title (case insensitive)"""
     return df[df['title'].str.contains(search_term, case=False, na=False)]
 
+def run_user_interface():
+    """Run the interactive user interface"""
+    df = load_tunes_from_database()
+    
+    if df.empty:
+        print("No tunes found in database!")
+        return
+    
+    print(f"\nLoaded {len(df)} tunes from database")
+    
+    while True:
+        print("\n=== ABC Tunes Database ===")
+        print("1. Show all tunes")
+        print("2. Search tunes by book")
+        print("3. Search tunes by type") 
+        print("4. Search tunes by title")
+        print("5. Show statistics")
+        print("6. Exit")
+        
+        choice = input("\nEnter your choice (1-6): ").strip()
+        
+        if choice == '1':
+            print(f"\nAll tunes ({len(df)} total):")
+            print(df[['book_number', 'title', 'tune_type']].to_string(index=False))
+        
+        elif choice == '2':
+            book_num = input("Enter book number: ").strip()
+            if book_num.isdigit():
+                result = get_tunes_by_book(df, int(book_num))
+                if not result.empty:
+                    print(f"\nTunes from book {book_num}:")
+                    print(result[['title', 'tune_type']].to_string(index=False))
+                else:
+                    print(f"No tunes found in book {book_num}")
+        
+        elif choice == '3':
+            tune_type = input("Enter tune type (e.g., jig, reel): ").strip()
+            result = get_tunes_by_type(df, tune_type)
+            if not result.empty:
+                print(f"\n{len(result)} {tune_type} tunes found:")
+                print(result[['book_number', 'title']].to_string(index=False))
+            else:
+                print(f"No {tune_type} tunes found")
+        
+        elif choice == '4':
+            search_term = input("Enter title search term: ").strip()
+            result = search_tunes(df, search_term)
+            if not result.empty:
+                print(f"\n{len(result)} tunes containing '{search_term}':")
+                print(result[['book_number', 'title', 'tune_type']].to_string(index=False))
+            else:
+                print(f"No tunes found containing '{search_term}'")
+        
+        elif choice == '5':
+            print("\n=== Database Statistics ===")
+            print(f"Total tunes: {len(df)}")
+            print(f"Books: {df['book_number'].nunique()}")
+            
+            print("\nTune types:")
+            tune_types = df['tune_type'].value_counts()
+            print(tune_types)
+            
+            print("\nKeys:")
+            keys = df['key'].value_counts()
+            print(keys)
+        
+        elif choice == '6':
+            print("Goodbye!")
+            break
+        
+        else:
+            print("Invalid choice. Please try again.")
+
