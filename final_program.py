@@ -8,8 +8,10 @@ def setup_database():
     conn = sqlite3.connect('tunes.db')
     cursor = conn.cursor()
     
+    # standard sql procedure, so the below code can run without issues
     cursor.execute('DROP TABLE IF EXISTS tunes')
     
+    # running the sql query to create the table
     cursor.execute('''
         CREATE TABLE tunes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -99,3 +101,37 @@ def parse_abc_file(file_path):
         tunes.append(current_tune)
     
     return tunes
+
+def process_all_books():
+    """Process all ABC files in all book folders"""
+    books_dir = "abc_books"
+    all_tunes = []
+    
+    if not os.path.exists(books_dir):
+        print(f"Error: Directory '{books_dir}' not found!")
+        return all_tunes
+    
+    for item in os.listdir(books_dir):
+        item_path = os.path.join(books_dir, item)
+        
+        if os.path.isdir(item_path) and item.isdigit():
+            book_number = int(item)
+            print(f"Processing book {book_number}...")
+            
+            for file in os.listdir(item_path):
+                if file.endswith('.abc'):
+                    file_path = os.path.join(item_path, file)
+                    print(f"  Reading: {file}")
+                    
+                    tunes = parse_abc_file(file_path)
+                    print(f"    Found {len(tunes)} tune(s)")
+                    
+                    # Add book number to each tune and insert into database
+                    for tune in tunes:
+                        tune['book_number'] = book_number
+                        insert_tune(book_number, tune)
+                    
+                    all_tunes.extend(tunes)
+    
+    return all_tunes
+
