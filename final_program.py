@@ -135,3 +135,11 @@ def process_all_books():
     
     return all_tunes
 
+# smaller functions begin here for each of the functionalities
+# runs a SQL query to select all tunes from database
+def load_tunes_from_database():
+    """Load all tunes from SQLite into DataFrame"""
+    conn = sqlite3.connect('tunes.db')
+    df = pd.read_sql('SELECT * FROM tunes', conn)
+    conn.close()
+    return df
