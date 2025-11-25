@@ -143,3 +143,21 @@ def load_tunes_from_database():
     df = pd.read_sql('SELECT * FROM tunes', conn)
     conn.close()
     return df
+
+#the below use Pandas logic from previous labs
+
+# by book
+def get_tunes_by_book(df, book_number):
+    """Get all tunes from a specific book"""
+    return df[df['book_number'] == book_number]
+
+# by tune_type
+def get_tunes_by_type(df, tune_type):
+    """Get all tunes of a specific type"""
+    return df[df['tune_type'].str.contains(tune_type, case=False, na=False)]
+
+# by name/title
+def search_tunes(df, search_term):
+    """Search tunes by title (case insensitive)"""
+    return df[df['title'].str.contains(search_term, case=False, na=False)]
+
