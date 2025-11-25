@@ -37,7 +37,7 @@ def insert_tune(book_number, tune_data):
         INSERT INTO tunes (book_number, title, tune_type, key, meter, raw_abc)
         VALUES (?, ?, ?, ?, ?, ?)
     ''', (book_number, tune_data.get('title', 'Unknown'), 
-          tune_data.get('type', 'Unknown'), tune_data.get('key', ''),
+          tune_data.get('tune_type', 'Unknown'), tune_data.get('key', ''),
           tune_data.get('meter', ''), tune_data.get('raw_abc', '')))
     
     conn.commit()
@@ -71,7 +71,7 @@ def parse_abc_file(file_path):
             
         elif line.startswith("R:") and current_tune:
             tune_type = line[2:].strip()
-            current_tune["type"] = tune_type
+            current_tune["tune_type"] = tune_type
             current_tune_notation += line
             
         elif line.startswith("K:") and current_tune:
