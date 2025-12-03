@@ -238,31 +238,31 @@ def main():
     """Main function to run the entire application"""
     print("Starting ABC Parser Application...")
     
-    # Setup database
+    # setup database
     setup_database()
     
-    # Process all ABC files
+    # process all ABC files
     all_tunes = process_all_books()
     print(f"Processing complete! Added {len(all_tunes)} tunes to database")
     
-    # Load into pandas and show some analysis
+    # load into pandas and show some analysis
     df = load_tunes_from_database()
     
     if not df.empty:
         print(f"\nDatabase contains {len(df)} tunes")
         print(f"Books: {df['book_number'].nunique()}")
         
-        # Show some tune types like in the lab
+        # show some tune types like in the lab
         tune_types = df['tune_type'].value_counts()
         print(f"\nTune types:")
         print(tune_types)
         
-        # Show some keys like in the lab  
+        # show some keys like in the lab  
         keys = df['key'].value_counts()
         print(f"\nKeys:")
         print(keys)
     
-    # Start user interface
+    # start user interface
     run_user_interface()
 
 if __name__ == "__main__":
